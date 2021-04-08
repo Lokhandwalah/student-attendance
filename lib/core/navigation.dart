@@ -20,7 +20,7 @@ class NavigationService extends AppNavigation {
     switch (settings.name) {
       case AppNavigation.routeLectureDetails:
         return MaterialPageRoute(
-            builder: (_) => LectureDetails(), settings: settings);
+            builder: (_) => LectureDetailsPage(settings.arguments), settings: settings);
       default:
         return null;
     }

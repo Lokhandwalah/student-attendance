@@ -80,7 +80,7 @@ class Faculty {
 
   static Faculty profMedha = Faculty(
     firstName: 'Medha',
-    lastName: 'Ambadekar',
+    lastName: 'Asurlekar',
     id: 'F6',
     subjects: <Subject>[
       Subjects.ddl,

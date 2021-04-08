@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:student_attendance/models/lecture.dart';
 
 class LectureDetail extends StatelessWidget {
   final String title, content;
@@ -30,20 +30,30 @@ class LectureDetail extends StatelessWidget {
                 ),
               )),
           SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title + ':',
-                  style: TextStyle(
-                    letterSpacing: 0.5,
-                    fontSize: 12,
-                  )),
-              SizedBox(height: 8),
-              Text(content, style: TextStyle(fontSize: 15, letterSpacing: 1)),
-            ],
+          Material(
+            color: Colors.transparent,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title + ':',
+                    style: TextStyle(
+                      letterSpacing: 0.5,
+                      fontSize: 12,
+                    )),
+                SizedBox(height: 8),
+                Text(content, style: TextStyle(fontSize: 15, letterSpacing: 1)),
+              ],
+            ),
           ),
         ],
       ),
     );
   }
+}
+
+class LectureDetailsParams {
+  final DateTime date;
+  final Lecture lecture;
+
+  LectureDetailsParams({@required this.date, @required this.lecture});
 }

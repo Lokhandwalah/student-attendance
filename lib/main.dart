@@ -10,7 +10,6 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final NavigationService navigationService = NavigationService();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       navigatorKey: NavigationService.navigatorKey,
@@ -20,6 +19,7 @@ class MyApp extends StatelessWidget {
         primaryColor: AppTheme.primary,
         primarySwatch: Colors.blue,
         accentColor: AppTheme.accent,
+        scaffoldBackgroundColor: Colors.grey.shade100,
       ),
       home: MainScreen(),
     );

@@ -9,6 +9,8 @@ import 'package:student_attendance/core/utils/size_config.dart';
 import 'package:student_attendance/models/lecture.dart';
 import 'package:student_attendance/screens/home/widgets/lecture_card.dart';
 
+import 'widgets/lecture_detail.dart';
+
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -43,7 +45,6 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -96,8 +97,9 @@ class _HomeScreenState extends State<HomeScreen>
               final lect = Lecture.todayLectures[index];
               return GestureDetector(
                 onTap: () => NavigationService().push(
-                     AppNavigation.routeLectureDetails,
-                    arguments: lect),
+                    AppNavigation.routeLectureDetails,
+                    arguments: LectureDetailsParams(
+                        date: DateTime.now(), lecture: lect)),
                 // onDoubleTap: () {
                 //   _listKey.currentState.removeItem(
                 //     index,

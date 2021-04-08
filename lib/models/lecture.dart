@@ -10,7 +10,7 @@ class Lecture {
   final String id;
   final Subject subject;
   final Faculty faculty;
-  final TimeOfDay startTime, endType;
+  final TimeOfDay startTime, endTime;
   final LectureType type;
 
   Lecture({
@@ -18,7 +18,7 @@ class Lecture {
     @required this.subject,
     @required this.faculty,
     @required this.startTime,
-    @required this.endType,
+    @required this.endTime,
     @required this.type,
   });
 
@@ -55,7 +55,7 @@ class Lecture {
       subject: Subjects.dbms,
       faculty: Faculty.profSarita,
       startTime: TimeOfDay(hour: 9, minute: 0),
-      endType: TimeOfDay(hour: 9, minute: 45),
+      endTime: TimeOfDay(hour: 9, minute: 45),
       type: LectureType.Theory,
     ),
     Lecture(
@@ -63,7 +63,7 @@ class Lecture {
       subject: Subjects.cPlusPlus,
       faculty: Faculty.profAarti,
       startTime: TimeOfDay(hour: 10, minute: 0),
-      endType: TimeOfDay(hour: 10, minute: 45),
+      endTime: TimeOfDay(hour: 10, minute: 45),
       type: LectureType.Theory,
     ),
     Lecture(
@@ -71,7 +71,7 @@ class Lecture {
       subject: Subjects.ds,
       faculty: Faculty.profJignasha,
       startTime: TimeOfDay(hour: 11, minute: 0),
-      endType: TimeOfDay(hour: 11, minute: 45),
+      endTime: TimeOfDay(hour: 11, minute: 45),
       type: LectureType.Theory,
     ),
     Lecture(
@@ -79,7 +79,7 @@ class Lecture {
       subject: Subjects.microProcessor,
       faculty: Faculty.profMedha,
       startTime: TimeOfDay(hour: 12, minute: 0),
-      endType: TimeOfDay(hour: 12, minute: 45),
+      endTime: TimeOfDay(hour: 12, minute: 45),
       type: LectureType.Theory,
     ),
     Lecture(
@@ -87,7 +87,7 @@ class Lecture {
       subject: Subjects.ds,
       faculty: Faculty.profJignasha,
       startTime: TimeOfDay(hour: 13, minute: 0),
-      endType: TimeOfDay(hour: 14, minute: 0),
+      endTime: TimeOfDay(hour: 14, minute: 0),
       type: LectureType.Practical,
     ),
   ];
@@ -98,7 +98,7 @@ class Lecture {
       subject: Subjects.microProcessor,
       faculty: Faculty.profMedha,
       startTime: TimeOfDay(hour: 9, minute: 0),
-      endType: TimeOfDay(hour: 9, minute: 45),
+      endTime: TimeOfDay(hour: 9, minute: 45),
       type: LectureType.Theory,
     ),
     Lecture(
@@ -106,7 +106,7 @@ class Lecture {
       subject: Subjects.cPlusPlus,
       faculty: Faculty.profAarti,
       startTime: TimeOfDay(hour: 10, minute: 0),
-      endType: TimeOfDay(hour: 10, minute: 45),
+      endTime: TimeOfDay(hour: 10, minute: 45),
       type: LectureType.Theory,
     ),
     Lecture(
@@ -114,7 +114,7 @@ class Lecture {
       subject: Subjects.os,
       faculty: Faculty.profSarita,
       startTime: TimeOfDay(hour: 11, minute: 0),
-      endType: TimeOfDay(hour: 11, minute: 45),
+      endTime: TimeOfDay(hour: 11, minute: 45),
       type: LectureType.Theory,
     ),
     Lecture(
@@ -122,7 +122,7 @@ class Lecture {
       subject: Subjects.wdl,
       faculty: Faculty.profKavita,
       startTime: TimeOfDay(hour: 12, minute: 0),
-      endType: TimeOfDay(hour: 12, minute: 45),
+      endTime: TimeOfDay(hour: 12, minute: 45),
       type: LectureType.Theory,
     ),
     Lecture(
@@ -130,7 +130,7 @@ class Lecture {
       subject: Subjects.wdl,
       faculty: Faculty.profKavita,
       startTime: TimeOfDay(hour: 13, minute: 0),
-      endType: TimeOfDay(hour: 14, minute: 0),
+      endTime: TimeOfDay(hour: 14, minute: 0),
       type: LectureType.Practical,
     ),
   ];
@@ -141,7 +141,7 @@ class Lecture {
       subject: Subjects.se,
       faculty: Faculty.profChitra,
       startTime: TimeOfDay(hour: 9, minute: 0),
-      endType: TimeOfDay(hour: 9, minute: 45),
+      endTime: TimeOfDay(hour: 9, minute: 45),
       type: LectureType.Theory,
     ),
     Lecture(
@@ -149,7 +149,7 @@ class Lecture {
       subject: Subjects.ds,
       faculty: Faculty.profJignasha,
       startTime: TimeOfDay(hour: 10, minute: 0),
-      endType: TimeOfDay(hour: 10, minute: 45),
+      endTime: TimeOfDay(hour: 10, minute: 45),
       type: LectureType.Theory,
     ),
     Lecture(
@@ -157,7 +157,7 @@ class Lecture {
       subject: Subjects.cPlusPlus,
       faculty: Faculty.profAarti,
       startTime: TimeOfDay(hour: 11, minute: 0),
-      endType: TimeOfDay(hour: 11, minute: 45),
+      endTime: TimeOfDay(hour: 11, minute: 45),
       type: LectureType.Theory,
     ),
     Lecture(
@@ -165,7 +165,7 @@ class Lecture {
       subject: Subjects.wdl,
       faculty: Faculty.profKavita,
       startTime: TimeOfDay(hour: 12, minute: 0),
-      endType: TimeOfDay(hour: 12, minute: 45),
+      endTime: TimeOfDay(hour: 12, minute: 45),
       type: LectureType.Theory,
     ),
     Lecture(
@@ -173,7 +173,7 @@ class Lecture {
       subject: Subjects.os,
       faculty: Faculty.profAarti,
       startTime: TimeOfDay(hour: 13, minute: 0),
-      endType: TimeOfDay(hour: 14, minute: 0),
+      endTime: TimeOfDay(hour: 14, minute: 0),
       type: LectureType.Practical,
     ),
   ];
@@ -184,7 +184,7 @@ class Lecture {
       subject: Subjects.microProcessor,
       faculty: Faculty.profMedha,
       startTime: TimeOfDay(hour: 9, minute: 0),
-      endType: TimeOfDay(hour: 9, minute: 45),
+      endTime: TimeOfDay(hour: 9, minute: 45),
       type: LectureType.Theory,
     ),
     Lecture(
@@ -192,7 +192,7 @@ class Lecture {
       subject: Subjects.cPlusPlus,
       faculty: Faculty.profAarti,
       startTime: TimeOfDay(hour: 10, minute: 0),
-      endType: TimeOfDay(hour: 10, minute: 45),
+      endTime: TimeOfDay(hour: 10, minute: 45),
       type: LectureType.Theory,
     ),
     Lecture(
@@ -200,7 +200,7 @@ class Lecture {
       subject: Subjects.os,
       faculty: Faculty.profSarita,
       startTime: TimeOfDay(hour: 11, minute: 0),
-      endType: TimeOfDay(hour: 11, minute: 45),
+      endTime: TimeOfDay(hour: 11, minute: 45),
       type: LectureType.Theory,
     ),
     Lecture(
@@ -208,7 +208,7 @@ class Lecture {
       subject: Subjects.wdl,
       faculty: Faculty.profKavita,
       startTime: TimeOfDay(hour: 12, minute: 0),
-      endType: TimeOfDay(hour: 12, minute: 45),
+      endTime: TimeOfDay(hour: 12, minute: 45),
       type: LectureType.Theory,
     ),
     Lecture(
@@ -216,7 +216,7 @@ class Lecture {
       subject: Subjects.wdl,
       faculty: Faculty.profKavita,
       startTime: TimeOfDay(hour: 13, minute: 0),
-      endType: TimeOfDay(hour: 14, minute: 0),
+      endTime: TimeOfDay(hour: 14, minute: 0),
       type: LectureType.Practical,
     ),
   ];
@@ -227,7 +227,7 @@ class Lecture {
       subject: Subjects.dbms,
       faculty: Faculty.profSarita,
       startTime: TimeOfDay(hour: 9, minute: 0),
-      endType: TimeOfDay(hour: 9, minute: 45),
+      endTime: TimeOfDay(hour: 9, minute: 45),
       type: LectureType.Theory,
     ),
     Lecture(
@@ -235,7 +235,7 @@ class Lecture {
       subject: Subjects.cPlusPlus,
       faculty: Faculty.profAarti,
       startTime: TimeOfDay(hour: 10, minute: 0),
-      endType: TimeOfDay(hour: 10, minute: 45),
+      endTime: TimeOfDay(hour: 10, minute: 45),
       type: LectureType.Theory,
     ),
     Lecture(
@@ -243,7 +243,7 @@ class Lecture {
       subject: Subjects.ds,
       faculty: Faculty.profJignasha,
       startTime: TimeOfDay(hour: 11, minute: 0),
-      endType: TimeOfDay(hour: 11, minute: 45),
+      endTime: TimeOfDay(hour: 11, minute: 45),
       type: LectureType.Theory,
     ),
     Lecture(
@@ -251,7 +251,7 @@ class Lecture {
       subject: Subjects.microProcessor,
       faculty: Faculty.profMedha,
       startTime: TimeOfDay(hour: 12, minute: 0),
-      endType: TimeOfDay(hour: 12, minute: 45),
+      endTime: TimeOfDay(hour: 12, minute: 45),
       type: LectureType.Theory,
     ),
     Lecture(
@@ -259,7 +259,7 @@ class Lecture {
       subject: Subjects.ds,
       faculty: Faculty.profJignasha,
       startTime: TimeOfDay(hour: 13, minute: 0),
-      endType: TimeOfDay(hour: 14, minute: 0),
+      endTime: TimeOfDay(hour: 14, minute: 0),
       type: LectureType.Practical,
     ),
   ];
@@ -270,7 +270,7 @@ class Lecture {
       subject: Subjects.ml,
       faculty: Faculty.profKavita,
       startTime: TimeOfDay(hour: 11, minute: 0),
-      endType: TimeOfDay(hour: 13, minute: 0),
+      endTime: TimeOfDay(hour: 13, minute: 0),
       type: LectureType.Webinar,
     ),
   ];
