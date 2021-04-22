@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:student_attendance/core/navigation.dart';
 import 'package:student_attendance/models/screens.dart';
-import 'package:student_attendance/screens/home/widgets/nav_drawer.dart';
+import 'package:student_attendance/screens/nav_drawer.dart';
 
 class MainScreen extends StatefulWidget {
   @override

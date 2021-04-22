@@ -5,7 +5,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:student_attendance/core/app_theme.dart';
 import 'package:student_attendance/core/navigation.dart';
-import 'package:student_attendance/core/utils/size_config.dart';
 import 'package:student_attendance/models/lecture.dart';
 import 'package:student_attendance/screens/home/widgets/lecture_card.dart';
 
@@ -42,14 +41,24 @@ class _HomeScreenState extends State<HomeScreen>
   final GlobalKey<SliverAnimatedListState> _listKey =
       GlobalKey<SliverAnimatedListState>();
 
+  final List<String> weekDays = <String>[
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday'
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
         slivers: [
           SliverAppBar(
             pinned: true,
-            expandedHeight: getScreenHeight(context) * 0.2,
+            expandedHeight: 150,
             title: const Text('Home'),
             leading: InkWell(
                 onTap: () => Scaffold.of(context).openDrawer(),
@@ -87,6 +96,29 @@ class _HomeScreenState extends State<HomeScreen>
                     SizedBox(height: 10),
                   ],
                 ),
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Container(
+              height: 50,
+              width: double.infinity,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                    child: Chip(
+                      backgroundColor:
+                          DateFormat.EEEE().format(currentDateTime) ==
+                                  weekDays[index]
+                              ? AppTheme.secondary
+                              : AppTheme.accent,
+                      label: Text(weekDays[index]),
+                    ),
+                  );
+                },
+                itemCount: weekDays.length,
               ),
             ),
           ),

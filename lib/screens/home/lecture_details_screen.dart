@@ -1,14 +1,19 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:student_attendance/core/app_theme.dart';
-import 'package:student_attendance/core/navigation.dart';
+import 'package:student_attendance/core/utils/size_config.dart';
+import 'package:student_attendance/models/api_response.dart';
 import 'package:student_attendance/models/enums.dart';
 import 'package:student_attendance/models/lecture.dart';
 import 'package:student_attendance/models/student.dart';
 import 'package:student_attendance/screens/home/widgets/lecture_card.dart';
 import 'package:student_attendance/screens/home/widgets/lecture_detail.dart';
+import 'package:student_attendance/services/api_service.dart';
 
 class LectureDetailsPage extends StatefulWidget {
   final LectureDetailsParams params;
@@ -20,12 +25,29 @@ class LectureDetailsPage extends StatefulWidget {
 class _LectureDetailsPageState extends State<LectureDetailsPage> {
   Lecture lecture;
   DateTime date;
-
+  List<File> images = [];
+  ApiResponse apiResponse;
   @override
   void initState() {
     super.initState();
     lecture = widget.params.lecture;
     date = widget.params.date;
+    apiResponse = ApiResponse(ids: []);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight
+    ]);
+  }
+
+  @override
+  void dispose() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
   }
 
   @override
@@ -126,6 +148,9 @@ class _LectureDetailsPageState extends State<LectureDetailsPage> {
                     const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
                 child: Card(
                   elevation: 10,
+                  color: apiResponse.presentIds.contains(student.rollNo)
+                      ? AppTheme.secondary
+                      : null,
                   child: ListTile(
                     leading: Card(
                       shape: CircleBorder(),
@@ -153,17 +178,102 @@ class _LectureDetailsPageState extends State<LectureDetailsPage> {
             }, childCount: Student.list.length),
           ),
           SliverToBoxAdapter(
+            child: SizedBox(height: 10),
+          ),
+          if (images.isNotEmpty)
+            SliverToBoxAdapter(
+              child: Container(
+                margin: const EdgeInsets.all(8),
+                child: Text(
+                  'Images:',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+            ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate((context, index) {
+              return Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Card(
+                      elevation: 10,
+                      color: AppTheme.primary,
+                      child: Container(
+                        height: 200,
+                        width: double.infinity,
+                        child: Image.file(
+                          images[index],
+                          fit: BoxFit.fitHeight,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                      right: 0,
+                      child: GestureDetector(
+                        onTap: () => setState(
+                          () => images.remove(images[index]),
+                        ),
+                        child: CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.redAccent,
+                          child: Icon(
+                            Icons.clear,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ))
+                ],
+              );
+            }, childCount: images.length),
+          ),
+          SliverToBoxAdapter(
             child: SizedBox(height: 100),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add_a_photo_outlined,
-          color: AppTheme.white,
-        ),
-        onPressed: () {},
+          child: Icon(
+            Icons.add_a_photo_outlined,
+            color: AppTheme.white,
+          ),
+          onPressed: clickImage),
+      bottomNavigationBar: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        color: AppTheme.primary,
+        height: images.isNotEmpty ? getScreenHeight(context) * 0.08 : 0,
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+        child: RaisedButton(
+            color: AppTheme.secondary,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            onPressed: () async {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) => WillPopScope(
+                  onWillPop: () => Future.value(false),
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+              );
+              apiResponse = await uploadImageToServer(images, context);
+              setState(() => Navigator.of(context).pop());
+            },
+            child: Text('Upload Images')),
       ),
     );
+  }
+
+  void clickImage() async {
+    final pickedFile =
+        await ImagePicker().getImage(source: ImageSource.gallery);
+    final image = File(pickedFile.path);
+    setState(() => images.add(image));
   }
 }

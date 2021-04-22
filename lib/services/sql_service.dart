@@ -33,7 +33,7 @@ class SQLService {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _GET_ALL_ACTION;
-      final response = await http.post(ROOT);
+      final response = await http.post(Uri(host: "192.168.1.10",path: "/student_attendance/functions.php"));
       print('getEmployees Response: ${response.body}');
       if (200 == response.statusCode) {
         List<Student> list = parseResponse(response.body);

@@ -21,14 +21,13 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             arrowColor: AppTheme.accent,
             currentAccountPicture: CircleAvatar(
               backgroundColor: AppTheme.secondary,
-              child: Icon(
-                Icons.account_circle_outlined,
-                color: AppTheme.white,
-                size: 50,
+              child: Image.asset(
+                'assets/images/man.png',
+                height: 50,
               ),
             ),
-            accountName: Text('Student'),
-            accountEmail: Text('student@somaiya.edu'),
+            accountName: Text('User Name'),
+            accountEmail: Text('faculty@somaiya.edu'),
           ),
           ...Screen.list.map((screen) {
             final bool isSelected = widget.currentScreen.type == screen.type;

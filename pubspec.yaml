@@ -23,11 +23,17 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  async: ^2.5.0
+  camera: ^0.8.1
   cupertino_icons: ^1.0.1
-  http: ^0.12.2
+  dio: ^4.0.0
+  fluttertoast: ^8.0.3
+  http: ^0.13.0
+  image_picker: ^0.7.4
   intl: ^0.16.0
   mysql1: ^0.17.1
-  fluttertoast: ^8.0.3
+  path: ^1.8.0
+  scroll_to_index: ^2.0.0
 
 dev_dependencies:
   flutter_test:
