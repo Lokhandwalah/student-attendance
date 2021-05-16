@@ -5,8 +5,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:student_attendance/core/app_theme.dart';
 import 'package:student_attendance/core/navigation.dart';
+import 'package:student_attendance/core/utils/size_config.dart';
 import 'package:student_attendance/models/lecture.dart';
 import 'package:student_attendance/screens/home/widgets/lecture_card.dart';
+import 'package:student_attendance/services/database.dart';
 
 import 'widgets/lecture_detail.dart';
 
@@ -21,11 +23,14 @@ class _HomeScreenState extends State<HomeScreen>
   DateTime currentDateTime = DateTime.now();
   Animation fadeIn, fadeOut;
   AnimationController animationController;
+  String selectedDay, currentDay;
 
   @override
   void initState() {
     super.initState();
     Lecture.init(DateTime.now().weekday);
+    selectedDay = currentDay = 'Monday';
+    // DateFormat('EEEEE').format(DateTime.now());
     animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     fadeIn = Tween<double>(begin: 0, end: 1).animate(animationController);
@@ -35,23 +40,31 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void dispose() {
     animationController.dispose();
+    dayScrollController.dispose();
     super.dispose();
   }
 
-  final GlobalKey<SliverAnimatedListState> _listKey =
-      GlobalKey<SliverAnimatedListState>();
+  final Map<String, int> weekDays = <String, int>{
+    'Monday': 1,
+    'Tuesday': 2,
+    'Wednesday': 3,
+    'Thursday': 4,
+    'Friday': 5,
+    'Saturday': 6,
+    'Sunday': 7,
+  };
 
-  final List<String> weekDays = <String>[
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday'
-  ];
+  final ScrollController dayScrollController = ScrollController();
+
+  void scrollToCurrentDay() => Future.delayed(Duration(seconds: 1), () {
+        if (weekDays[currentDay] > 3)
+          dayScrollController.animateTo(50.0 * weekDays[currentDay],
+              duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+      });
 
   @override
   Widget build(BuildContext context) {
+    scrollToCurrentDay();
     return Scaffold(
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
@@ -105,16 +118,33 @@ class _HomeScreenState extends State<HomeScreen>
               width: double.infinity,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
+                controller: dayScrollController,
                 itemBuilder: (context, index) {
+                  final weekDay = weekDays.keys.toList()[index];
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                    child: Chip(
-                      backgroundColor:
-                          DateFormat.EEEE().format(currentDateTime) ==
-                                  weekDays[index]
-                              ? AppTheme.secondary
-                              : AppTheme.accent,
-                      label: Text(weekDays[index]),
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedDay = weekDay;
+                        });
+                      },
+                      child: Chip(
+                        backgroundColor: currentDay == weekDay
+                            ? AppTheme.secondary
+                            : selectedDay == weekDay
+                                ? AppTheme.primary
+                                : AppTheme.accent,
+                        label: Text(
+                          weekDay,
+                          style: TextStyle(
+                            color:
+                                currentDay == weekDay || selectedDay == weekDay
+                                    ? AppTheme.white
+                                    : null,
+                          ),
+                        ),
+                      ),
                     ),
                   );
                 },
@@ -122,42 +152,87 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
           ),
-          SliverAnimatedList(
-            key: _listKey,
-            initialItemCount: Lecture.todayLectures.length,
-            itemBuilder: (context, index, animation) {
-              final lect = Lecture.todayLectures[index];
-              return GestureDetector(
-                onTap: () => NavigationService().push(
-                    AppNavigation.routeLectureDetails,
-                    arguments: LectureDetailsParams(
-                        date: DateTime.now(), lecture: lect)),
-                // onDoubleTap: () {
-                //   _listKey.currentState.removeItem(
-                //     index,
-                //     (context, animation) => FadeTransition(
-                //       opacity: animation,
-                //       child: Container(
-                //         padding: const EdgeInsets.symmetric(
-                //             vertical: 8.0, horizontal: 2.0),
-                //         child: Card(
-                //           elevation: 10,
-                //           shape: RoundedRectangleBorder(
-                //               borderRadius: BorderRadius.circular(20)),
-                //           child: Container(
-                //             width: double.infinity,
-                //             height: getScreenHeight(context) * 0.25,
-                //           ),
-                //         ),
-                //       ),
-                //     ),
-                //   );
-                //   setState(() => Lecture.removeLec(lect));
-                // },
-                child: LectureCard(lect),
-              );
-            },
-          ),
+          FutureBuilder<List<Lecture>>(
+              future: DBService().getLectures(
+                  day: selectedDay.toLowerCase(),
+                  weekDay: weekDays[selectedDay]),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData)
+                  return SliverToBoxAdapter(
+                      child: Container(
+                    height: getScreenHeight(context) * 0.4,
+                    width: double.infinity,
+                    child: Center(
+                        child: Text(
+                      'Loading...',
+                      style: TextStyle(fontSize: 20),
+                    )),
+                  ));
+                if (snapshot.hasError)
+                  return SliverToBoxAdapter(
+                      child: Container(
+                    height: getScreenHeight(context) * 0.4,
+                    width: double.infinity,
+                    child: Center(
+                        child: Text(
+                      'Error',
+                      style: TextStyle(fontSize: 20),
+                    )),
+                  ));
+                List<Lecture> lectures = snapshot.data;
+                return lectures.isEmpty
+                    ? SliverToBoxAdapter(
+                        child: Container(
+                        height: getScreenHeight(context) * 0.4,
+                        width: double.infinity,
+                        child: Center(
+                            child: Text(
+                          'No Lectures ${selectedDay == currentDay ? 'Today' : 'on ' + selectedDay} :)',
+                          style: TextStyle(fontSize: 20),
+                        )),
+                      ))
+                    : SliverList(
+                        delegate: SliverChildListDelegate(
+                          lectures.map(
+                            (lect) {
+                              try {
+                                return GestureDetector(
+                                  onTap: () => NavigationService().push(
+                                      AppNavigation.routeLectureDetails,
+                                      arguments: LectureDetailsParams(
+                                          date: DateTime.now(), lecture: lect)),
+                                  // onDoubleTap: () {
+                                  //   _listKey.currentState.removeItem(
+                                  //     index,
+                                  //     (context, animation) => FadeTransition(
+                                  //       opacity: animation,
+                                  //       child: Container(
+                                  //         padding: const EdgeInsets.symmetric(
+                                  //             vertical: 8.0, horizontal: 2.0),
+                                  //         child: Card(
+                                  //           elevation: 10,
+                                  //           shape: RoundedRectangleBorder(
+                                  //               borderRadius: BorderRadius.circular(20)),
+                                  //           child: Container(
+                                  //             width: double.infinity,
+                                  //             height: getScreenHeight(context) * 0.25,
+                                  //           ),
+                                  //         ),
+                                  //       ),
+                                  //     ),
+                                  //   );
+                                  //   setState(() => Lecture.removeLec(lect));
+                                  // },
+                                  child: LectureCard(lect),
+                                );
+                              } catch (e) {
+                                return Container();
+                              }
+                            },
+                          ).toList(),
+                        ),
+                      );
+              }),
           SliverToBoxAdapter(
             child: SizedBox(height: 50),
           )

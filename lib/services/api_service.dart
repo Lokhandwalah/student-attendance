@@ -11,7 +11,7 @@ Future<ApiResponse> uploadImageToServer(
     List<File> imageFiles, BuildContext context) async {
   try {
     print("attempting to connect to server……");
-    var uri = Uri.parse('http://773b6d3e376a.ngrok.io/');
+    var uri = Uri.parse('http://21974d7bb1a3.ngrok.io/');
     var request = new http.MultipartRequest('POST', uri);
     print('connection established.');
     imageFiles.forEach((image) async {
@@ -28,7 +28,7 @@ Future<ApiResponse> uploadImageToServer(
     http.StreamedResponse streamedResponse = response;
     final String responseIds = await streamedResponse.stream.bytesToString();
     Map<String, dynamic> data = json.decode(responseIds);
-    Fluttertoast.showToast(msg: 'Succes: $response');
+    Fluttertoast.showToast(msg: 'Succes');
     return ApiResponse(ids: data['present_ids']);
   } catch (e) {
     print('Exception Occurred: $e');

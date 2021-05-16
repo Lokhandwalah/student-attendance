@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:student_attendance/models/enums.dart';
@@ -27,8 +28,25 @@ class Lecture {
   static void init(int weekDay) => todayLectures = getLectures(weekDay);
 
   static void addLect(Lecture lect) => todayLectures.add(lect);
-  
+
   static void removeLec(Lecture lect) => todayLectures.remove(lect);
+
+  static Lecture fromJson({
+    @required Map<String, dynamic> data,
+    @required String lectId,
+    @required Subject subject,
+    @required Faculty faculty,
+  }) {
+    return Lecture(
+      id: lectId,
+      subject: subject,
+      faculty: faculty,
+      startTime:
+          TimeOfDay.fromDateTime((data['start_time'] as Timestamp).toDate()),
+      endTime: TimeOfDay.fromDateTime((data['end_time'] as Timestamp).toDate()),
+      type: getLectureType(data['type']),
+    );
+  }
 
   static List<Lecture> getLectures(int weekDay) {
     switch (weekDay) {
@@ -49,48 +67,7 @@ class Lecture {
     }
   }
 
-  static List<Lecture> monday = <Lecture>[
-    Lecture(
-      id: 'L1',
-      subject: Subjects.dbms,
-      faculty: Faculty.profSarita,
-      startTime: TimeOfDay(hour: 9, minute: 0),
-      endTime: TimeOfDay(hour: 9, minute: 45),
-      type: LectureType.Theory,
-    ),
-    Lecture(
-      id: 'L2',
-      subject: Subjects.cPlusPlus,
-      faculty: Faculty.profAarti,
-      startTime: TimeOfDay(hour: 10, minute: 0),
-      endTime: TimeOfDay(hour: 10, minute: 45),
-      type: LectureType.Theory,
-    ),
-    Lecture(
-      id: 'L3',
-      subject: Subjects.ds,
-      faculty: Faculty.profJignasha,
-      startTime: TimeOfDay(hour: 11, minute: 0),
-      endTime: TimeOfDay(hour: 11, minute: 45),
-      type: LectureType.Theory,
-    ),
-    Lecture(
-      id: 'L4',
-      subject: Subjects.microProcessor,
-      faculty: Faculty.profMedha,
-      startTime: TimeOfDay(hour: 12, minute: 0),
-      endTime: TimeOfDay(hour: 12, minute: 45),
-      type: LectureType.Theory,
-    ),
-    Lecture(
-      id: 'L5',
-      subject: Subjects.ds,
-      faculty: Faculty.profJignasha,
-      startTime: TimeOfDay(hour: 13, minute: 0),
-      endTime: TimeOfDay(hour: 14, minute: 0),
-      type: LectureType.Practical,
-    ),
-  ];
+  static List<Lecture> monday = <Lecture>[];
 
   static List<Lecture> tuesday = <Lecture>[
     Lecture(
@@ -274,4 +251,42 @@ class Lecture {
       type: LectureType.Webinar,
     ),
   ];
+
+  static List<Lecture> sunday = <Lecture>[];
+
+  static setLectures(int weekDay, List<Lecture> lectures) {
+    switch (weekDay) {
+      case 1:
+        monday = lectures;
+        break;
+      case 2:
+        tuesday = lectures;
+        break;
+      case 3:
+        wednesday = lectures;
+        break;
+      case 4:
+        thursday = lectures;
+        break;
+      case 5:
+        friday = lectures;
+        break;
+      case 6:
+        saturday = lectures;
+        break;
+      case 7:
+        sunday = lectures;
+        break;
+    }
+  }
+}
+
+class LectureAttendance {
+  final Lecture lectureDetails;
+  final List<int> studentRollNos;
+
+  LectureAttendance({
+    this.lectureDetails,
+    this.studentRollNos,
+  });
 }

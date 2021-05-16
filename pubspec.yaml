@@ -30,10 +30,14 @@ dependencies:
   fluttertoast: ^8.0.3
   http: ^0.13.0
   image_picker: ^0.7.4
-  intl: ^0.16.0
   mysql1: ^0.17.1
   path: ^1.8.0
   scroll_to_index: ^2.0.0
+  cloud_firestore: ^1.0.1
+  firebase_auth: ^1.0.1
+  firebase_core: ^1.0.1
+  provider: ^4.3.2+2
+  shared_preferences: ^2.0.5
 
 dev_dependencies:
   flutter_test:

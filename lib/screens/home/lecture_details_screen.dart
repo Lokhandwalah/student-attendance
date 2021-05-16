@@ -140,6 +140,20 @@ class _LectureDetailsPageState extends State<LectureDetailsPage> {
               ),
             ),
           ),
+          if (apiResponse.presentIds.isNotEmpty)
+            SliverToBoxAdapter(
+              child: Container(
+                margin: const EdgeInsets.all(8),
+                child: Text(
+                  'Tap to Mark/Unmark manually',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: AppTheme.secondary,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+            ),
           SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
               final student = Student.list[index];
@@ -152,14 +166,27 @@ class _LectureDetailsPageState extends State<LectureDetailsPage> {
                       ? AppTheme.secondary
                       : null,
                   child: ListTile(
+                    onTap: () {
+                      if (apiResponse.presentIds.isNotEmpty) {
+                        setState(() {
+                          apiResponse.presentIds.contains(student.rollNo)
+                              ? apiResponse.presentIds.remove(student.rollNo)
+                              : apiResponse.presentIds.add(student.rollNo);
+                        });
+                      }
+                    },
                     leading: Card(
                       shape: CircleBorder(),
                       elevation: 8,
                       child: CircleAvatar(
                         backgroundColor: Colors.white,
                         child: Icon(
-                          Icons.person_outline,
-                          color: AppTheme.secondary,
+                          apiResponse.presentIds.contains(student.rollNo)
+                              ? Icons.check
+                              : Icons.person_outline,
+                          color: apiResponse.presentIds.contains(student.rollNo)
+                              ? AppTheme.accent
+                              : AppTheme.secondary,
                         ),
                       ),
                     ),
@@ -246,26 +273,58 @@ class _LectureDetailsPageState extends State<LectureDetailsPage> {
       bottomNavigationBar: AnimatedContainer(
         duration: Duration(milliseconds: 300),
         color: AppTheme.primary,
-        height: images.isNotEmpty ? getScreenHeight(context) * 0.08 : 0,
+        height: images.isNotEmpty ? getScreenHeight(context) * 0.1 : 0,
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-        child: RaisedButton(
-            color: AppTheme.secondary,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            onPressed: () async {
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (_) => WillPopScope(
-                  onWillPop: () => Future.value(false),
-                  child: Center(child: CircularProgressIndicator()),
-                ),
-              );
-              apiResponse = await uploadImageToServer(images, context);
-              setState(() => Navigator.of(context).pop());
-            },
-            child: Text('Upload Images')),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+        child: Row(
+          children: [
+            Expanded(
+              child: RaisedButton(
+                  color: AppTheme.secondary,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  onPressed: () async {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (_) => WillPopScope(
+                        onWillPop: () => Future.value(false),
+                        child: Center(child: CircularProgressIndicator()),
+                      ),
+                    );
+                    apiResponse = await uploadImageToServer(images, context);
+                    setState(() => Navigator.of(context).pop());
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      apiResponse.presentIds.isNotEmpty
+                          ? 'Upload Again'
+                          : 'Upload Images',
+                      style: TextStyle(color: AppTheme.white),
+                    ),
+                  )),
+            ),
+            if (apiResponse.presentIds.isNotEmpty) SizedBox(width: 10),
+            if (apiResponse.presentIds.isNotEmpty)
+              Expanded(
+                child: RaisedButton(
+                    color: AppTheme.accent,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        'Done',
+                        style: TextStyle(color: AppTheme.white),
+                      ),
+                    )),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -273,7 +332,9 @@ class _LectureDetailsPageState extends State<LectureDetailsPage> {
   void clickImage() async {
     final pickedFile =
         await ImagePicker().getImage(source: ImageSource.gallery);
-    final image = File(pickedFile.path);
-    setState(() => images.add(image));
+    if (pickedFile != null) {
+      final image = File(pickedFile.path);
+      setState(() => images.add(image));
+    }
   }
 }

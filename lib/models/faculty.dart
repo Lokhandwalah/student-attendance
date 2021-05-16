@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:student_attendance/models/enums.dart';
+import 'package:student_attendance/services/database.dart';
 
 import 'subject.dart';
 
@@ -24,6 +25,26 @@ class Faculty {
       " " +
       this.lastName.substring(0, 1).toUpperCase() +
       this.lastName.substring(1).toLowerCase();
+
+  static Future<Faculty> fromJson(
+    Map<String, dynamic> data,
+    String facultyId,
+  ) async {
+    final names = data['name'].toString().split(' ');
+    // List subjectIds = data['subjects'];
+    List<Subject> subjects = <Subject>[];
+    // subjectIds.forEach((subject) async {
+    //   final subjectDoc = await DBService().getSubject(subject.toString());
+    //   subjects.add(Subject.fromJson(subjectDoc.data(), subjectDoc.id));
+    // });
+    return Faculty(
+      id: facultyId,
+      firstName: names.first.trim(),
+      lastName: names.last.trim(),
+      subjects: subjects,
+      dept: getDepartment(data['dept']),
+    );
+  }
 
   static Faculty profSarita = Faculty(
     firstName: 'Sarita',

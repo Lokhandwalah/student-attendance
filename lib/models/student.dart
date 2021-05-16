@@ -53,7 +53,8 @@ class Student {
           id: 'S1',
           rollNo: 27,
           year: Year.TE,
-        ),Student(
+        ),
+        Student(
           firstName: 'Shivam',
           middleName: 'K',
           lastName: 'Panchal',
@@ -78,9 +79,9 @@ class Student {
           year: Year.TE,
         ),
         Student(
-          firstName: 'Wahab',
+          firstName: 'Ritika',
           middleName: 'M',
-          lastName: 'Shaikh',
+          lastName: 'Keni',
           id: 'S4',
           rollNo: 5,
           year: Year.TE,
